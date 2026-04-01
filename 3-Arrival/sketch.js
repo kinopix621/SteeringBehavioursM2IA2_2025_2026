@@ -3,11 +3,12 @@ let snakes = [];
 let vehicles = [];
 let points = [];
 let mode = "snake";
+let text = "PLURIBUS"
 
 // Appelée avant de démarrer l'animation
 function preload() {
   // en général on charge des images, des fontes de caractères etc.
-  font = loadFont("./assets/inconsolata.otf");
+  font = loadFont('./assets/Freudian.otf');
 }
 
 function setup() {
@@ -37,7 +38,6 @@ function setup() {
   s2.maxSpeed = 8; // Vitesse maximale plus rapide pour s2
   s2.maxForce = 0.5; // Force maximale plus élevée pour s2
   snakes.push(s2);
-  
 }
 
 function creerVehicules(n) {
@@ -63,7 +63,7 @@ function draw() {
   pop();
 
   // pour effet psychedelique
-  //background(0, 0, 0, 10);
+  // background(0, 0, 0, 10);
 
   target.x = mouseX;
   target.y = mouseY;
@@ -95,6 +95,20 @@ function draw() {
     });
   }
 }
+
+function textDraw(text, x, y, size) {
+  let points = font.textToPoints(text, x, y, size, { sampleFactor: 0.5 });
+  let steeringForce;
+  points.forEach((point, index) => {
+    point = createVector(point.x, point.y);
+    steeringForce = vehicles[index].arrive(point, 0);
+    vehicles[index].applyForce(steeringForce);
+    vehicles[index].update();
+    vehicles[index].show();
+
+  })
+}
+
 
 function keyPressed() {
   if (key === "d") {

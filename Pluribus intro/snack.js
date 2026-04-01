@@ -1,12 +1,12 @@
-class Vehicle {
+class Snake extends Vehicle {
   static debug = false;
 
   constructor(x, y) {
     this.pos = createVector(x, y);
     this.vel = createVector(0, 0);
     this.acc = createVector(0, 0);
-    this.maxSpeed = 7;
-    this.maxForce = 0.4;
+    this.maxSpeed = 4;
+    this.maxForce = 0.2;
     this.r = 16;
 
     // pour arrival
@@ -83,7 +83,7 @@ class Vehicle {
     return createVector(0, 0);
   }
 
-
+  
   wander() {
     // point devant le véhicule, centre du cercle
     let pointDevant = this.vel.copy();
@@ -176,7 +176,7 @@ class Vehicle {
     return this.seek(target);
   }
 
-  arrive(target, d = 0) {
+  arrive(target, d=0) {
     // 2nd argument true enables the arrival behavior
     // 3rd argument d is the distance behind the target
     // for "snake" behavior
@@ -187,7 +187,7 @@ class Vehicle {
     // recopier code de flee de l'exemple précédent
   }
 
-  seek(target, arrival = false, d = 0) {
+  seek(target, arrival = false, d=0) {
     let valueDesiredSpeed = this.maxSpeed;
 
     if (arrival) {
@@ -227,7 +227,7 @@ class Vehicle {
     // un vecteur qui va vers la cible, c'est pour le moment la vitesse désirée
     let desiredSpeed = p5.Vector.sub(target, this.pos);
     desiredSpeed.setMag(valueDesiredSpeed);
-
+   
     // Force = desiredSpeed - currentSpeed
     let force = p5.Vector.sub(desiredSpeed, this.vel);
     force.limit(this.maxForce);
@@ -235,7 +235,7 @@ class Vehicle {
   }
 
   applyForce(force) {
-    this.acc.add(force);  
+    this.acc.add(force);
   }
 
   update() {
@@ -254,29 +254,21 @@ class Vehicle {
     strokeWeight(2);
     push();
     translate(this.pos.x, this.pos.y);
-    //if(this.vel.mag() > 0.2)
+    if(this.vel.mag() > 0.2)
       rotate(this.vel.heading());
 
-    // stroke(255);
-    // strokeWeight(2);
-    // fill(255);
-    // stroke(0);
-    // strokeWeight(2);
-    // push();
-    // translate(this.pos.x, this.pos.y);
-    // if (this.vel.mag() > 0.2)
-    //   rotate(this.vel.heading());
-
-    // triangle(-this.r, -this.r / 2, -this.r, this.r / 2, this.r, 0);
-    // pop();
-
-    push();
-    // on dessine le vehicule comme un cercle
-    fill("white");
-    translate(this.pos.x, this.pos.y);
-    circle(0, 0, 2);
+    triangle(-this.r, -this.r / 2, -this.r, this.r / 2, this.r, 0);
     pop();
-
+    /*
+   push();
+   // on dessine le vehicule comme un cercle
+   fill("blue");
+   stroke("white");
+   strokeWeight(2);
+   translate(this.pos.x, this.pos.y);
+   circle(0, 0, this.r * 2);  
+   pop();
+   */
   }
 
   edges() {
