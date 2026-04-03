@@ -13,10 +13,11 @@ function findProjection(pos, a, b) {
   v2.add(pos);
   return v2;
 }
-class Heart {
+class Heart extends Vehicle {
   static debug = false;
 
   constructor(x, y) {
+    super(x, y);
     // position du véhicule
     this.pos = createVector(x, y);
     // vitesse du véhicule
@@ -62,10 +63,19 @@ class Heart {
   avoid(obstacles) {
     let steer = createVector(0, 0);
     let count = 0;
+    
+    let currentMaxSpeed = this.maxSpeed;
+    let currentMaxForce = this.maxForce;
 
     // Detection 360° : On boucle sur tous les obstacles
     obstacles.forEach(o => {
       let d = p5.Vector.dist(this.pos, o.pos);
+
+      // Si la spear est très proche (deuxième cercle de détection, zone de danger)
+      if (d > 0 && d < this.perceptionRadius / 2) {
+        currentMaxSpeed = this.maxSpeed * 1.5;
+        currentMaxForce = this.maxForce * 1.5;
+      }
 
       // Si l'obstacle est dans notre rayon de perception
       if (d > 0 && d < this.perceptionRadius) {
@@ -80,9 +90,9 @@ class Heart {
 
     if (count > 0) {
       steer.div(count);
-      steer.setMag(this.maxSpeed);
+      steer.setMag(currentMaxSpeed);
       steer.sub(this.vel);
-      steer.limit(this.maxForce);
+      steer.limit(currentMaxForce);
     }
 
     if (Heart.debug) {
@@ -90,6 +100,10 @@ class Heart {
       noFill();
       stroke(0, 255, 0, 100);
       circle(this.pos.x, this.pos.y, this.perceptionRadius * 2);
+      
+      // Deuxième cercle rouge pour indiquer la zone de danger accrue
+      stroke(255, 0, 0, 100);
+      circle(this.pos.x, this.pos.y, this.perceptionRadius);
       pop();
     }
 
@@ -340,7 +354,6 @@ class Heart {
   }
 
   // Comportement Separation : on garde ses distances par rapport aux voisins
-  // ON ETUDIERA CE COMPORTEMENT PLUS TARD !
   separate(boids) {
     let desiredseparation = this.r;
     let steer = createVector(0, 0, 0);
@@ -417,8 +430,27 @@ class Heart {
     this.drawPath();
     // dessin du vehicule
     this.drawVehicle();
+    // dessin sous la forme d'une flèche du vecteur vitesse
+    this.drawVelocityVector();
   }
 
+  drawVelocityVector() {
+    push();
+
+    // Dessin du vecteur vitesse
+    // Il part du centre du véhicule et va dans la direction du vecteur vitesse
+    strokeWeight(3);
+    stroke("red");
+    line(this.pos.x, this.pos.y, this.pos.x + this.vel.x * 10, this.pos.y + this.vel.y * 10);
+    // dessine une petite fleche au bout du vecteur vitesse
+    let arrowSize = 5;
+    translate(this.pos.x + this.vel.x * 10, this.pos.y + this.vel.y * 10);
+    rotate(this.vel.heading());
+    translate(-arrowSize / 2, 0);
+    triangle(0, arrowSize / 2, 0, -arrowSize / 2, arrowSize, 0);
+
+    pop();
+  }
   drawVehicle() {
     // formes fil de fer en blanc
     stroke(255);
@@ -435,7 +467,11 @@ class Heart {
     translate(this.pos.x, this.pos.y);
 
     // Affichage de heart.png centré
+    if (this.hitTime !== undefined && millis() - this.hitTime < 500) {
+      tint(100);
+    }
     image(heartImg, -this.r / 2, -this.r / 2, this.r, this.r);
+    noTint();
 
     // cercle pour le debug
     if (Heart.debug) {
