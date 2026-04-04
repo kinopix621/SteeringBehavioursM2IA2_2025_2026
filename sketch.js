@@ -62,15 +62,14 @@ function setup() {
   restartButton.hide();
   perceptionSlider = createCustomSlider("Rayon de detection", 0, 300, 150, 1, 20, 180);
   heartForceSlider = createCustomSlider("Force du coeur", 0, 1, 0.5, 0.01, 20, 210);
-  heartSpeedSlider = createCustomSlider("Vitesse du coeur", 1, 20, 10, 0.5, 20, 240);
+  heartSpeedSlider = createCustomSlider("Vitesse du coeur", 1, 10, 5, 0.5, 20, 240);
 
-  laserForceSlider = createCustomSlider("Force des lasers", 0, 1, 0.5, 0.01, 20, 270);
-  laserSpeedSlider = createCustomSlider("Vitesse des lasers", 1, 20, 10, 0.5, 20, 300);
+  laserForceSlider = createCustomSlider("Force des lasers", 0, 1, 0.4, 0.01, 20, 270);
+  laserSpeedSlider = createCustomSlider("Vitesse des lasers", 1, 20, 5, 0.5, 20, 300);
   laserCohesionSlider = createCustomSlider("Cohésion des lasers", 0, 1, 0.5, 0.01, 20, 330);
   laserSeparationSlider = createCustomSlider("Séparation des lasers", 0, 1, 0.5, 0.01, 20, 360);
-  spearSpeedSlider = createCustomSlider("Vitesse des lances", 1, 20, 10, 0.5, 20, 390);
+  spearSpeedSlider = createCustomSlider("Vitesse des lances", 1, 20, 7, 0.5, 20, 390);
 
-  noCursor();
   // Création d'une version blanche du cœur pour le curseur
   player = createGraphics(30, 30);
   player.image(playerImg, 0, 0, 30, 30);
